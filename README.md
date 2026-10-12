@@ -1,1 +1,1 @@
-# Laboratorio1-Programaci-n-Cient-fica
+Integrantes Enzo, Matías y Daniel
