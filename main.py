@@ -7,10 +7,8 @@ from typing import Sequence
 from pipeline.contexto import ContextoPipeline
 from pipeline.pipeline import Pipeline
 from stages import (
-
     AnalisisIndividual,
     CargaExperimentos,
-
     ExportacionResultados,
     PreparacionTrayectorias,
 )
