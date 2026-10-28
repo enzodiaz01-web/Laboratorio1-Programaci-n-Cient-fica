@@ -1,0 +1,24 @@
+```
+Windows
+
+Se puede runnear directo en el main o
+
+python3 main.py --input ./data --output ./results
+
+con las frecuencia especificada
+python3 main.py --input ./data --output ./results --fps 25
+
+Consultar ayuda
+python3 main.py --help
+------------------------------------------------------------------------------
+En LINUX
+python3 main.py
+
+Especificar los directorios de entrada y salida
+python3 main.py --input ./data --output ./results
+
+Forzar una frecuencia de muestreo especifica
+python3 main.py --input ./data --output ./results --fps 25
+
+Consultar ayuda 
+python3 main.py --help
