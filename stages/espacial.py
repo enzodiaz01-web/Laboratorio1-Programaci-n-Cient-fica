@@ -12,7 +12,7 @@ class AnalisisEspacial(EtapaPipeline[list[Experimento], list[Experimento]]):
         "zona_1_entrada": (2.0, 4.0),
         "zona_2_centro_der": (0.0, 2.0),
         "zona_3_centro_izq": (-2.0, 0.0),
-        "zona_4_salida": (-4.0, -2.0)
+        "zona_4_salida": (-4.0, -2.0),
     }
     ANCHO_CORREDOR: float = 5.0  
     X_MIN_AREA: float = -4.0
@@ -61,7 +61,7 @@ class AnalisisEspacial(EtapaPipeline[list[Experimento], list[Experimento]]):
                 v_i = d_i / dt
 
                 for nombre_zona, (x_min, x_max) in self.ZONAS.items():
-                    if x_min <= p2.x < x_max:
+                    if x_min <= p2.x < x_max or (x_max == self.X_MAX_AREA and p2.x == x_max):
                         vel_por_zona[nombre_zona].append(v_i)
                         tiempos_peaton_zona[nombre_zona][trayectoria.id_peaton] = (
                             tiempos_peaton_zona[nombre_zona].get(trayectoria.id_peaton, 0.0) + dt
@@ -110,6 +110,7 @@ class AnalisisEspacial(EtapaPipeline[list[Experimento], list[Experimento]]):
 
         if not peatones_por_frame:
             return {
+                "area_referencia_m2": area_region,
                 "densidad_media": 0.0,
                 "densidad_maxima": 0.0,
                 "correlacion_densidad_velocidad": 0.0,
@@ -187,5 +188,5 @@ class AnalisisEspacial(EtapaPipeline[list[Experimento], list[Experimento]]):
             "peatones_cruzan_linea": n_cruces,
             "intervalo_flujo_s": delta_t,
             "flujo_peatonal": flujo,
-            "flujo_especifico": flujo_especifico
+            "flujo_especifico": flujo_especifico,
         }
