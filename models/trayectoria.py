@@ -1,5 +1,5 @@
 """Modelo básico de una trayectoria peatonal."""
-
+import math
 from dataclasses import dataclass, field
 
 from .observacion import Observacion

@@ -1,0 +1,12 @@
+{
+  "num_experimentos": 9.0,
+  "num_peatones_total": 6898.0,
+  "velocidad_media_global": 1.1595446123043032,
+  "densidad_media_global": 1.6110009680678639,
+  "flujo_medio_global": 6.718890889121965,
+  "correlacion_densidad_velocidad_entre_experimentos": -0.8952297785108795,
+  "pendiente_velocidad_vs_densidad": -0.6003821675030553,
+  "correlacion_densidad_flujo_entre_experimentos": 0.22268777118967903,
+  "indice_experimento_mas_denso": 8.0,
+  "indice_experimento_mas_lento": 8.0
+}

@@ -6,38 +6,44 @@ from models.trayectoria import Trayectoria
 from pipeline.contexto import ContextoPipeline
 from pipeline.etapa import EtapaPipeline
 
-
 class AnalisisIndividual(EtapaPipeline[list[Experimento], list[Experimento]]):
     """Coordina el análisis de múltiples trayectorias y reúne sus indicadores."""
-
     def ejecutar(
         self,
         experimentos: list[Experimento],
         contexto: ContextoPipeline,
     ) -> list[Experimento]:
         """Analiza las trayectorias de cada experimento."""
-        fps = contexto.fps if hasattr(contexto, "fps") and contexto.fps else 25.0
-
+        
         for experimento in experimentos:
+            # Revisa los FPS desde el contexto o el archivo según la lógica del equipo
+            fps_EXP = (
+                contexto.fps
+                if (hasattr(contexto, "fps") and contexto.fps and contexto.fps > 0)
+                else experimento.resultados_colectivos.get("fps_archivo", 25.0)
+            )
+            dt = 1.0 / fps_EXP
+            
             for trayectoria in experimento.trayectorias:
                 # 1. Obtener indicadores base usando los métodos del modelo
-                indicadores = self._calcular_indicadores(trayectoria, fps)
-
+                indicadores = self._calcular_indicadores(trayectoria, fps_EXP)
+                if not indicadores:
+                    continue
+                    
                 # 2. Detectar intervalos de detención
-                detenciones = self._detectar_detenciones(trayectoria, fps)
-                
-                # Resumen de detenciones
-                dt = 1.0 / fps
+                detenciones = self._detectar_detenciones(trayectoria, fps_EXP)
                 tiempo_detenido = sum((fin - ini + 1) * dt for ini, fin in detenciones)
                 tiempo_total = indicadores.get("tiempo_total", 0.0)
                 porcentaje_detenido = (
-                    (tiempo_detenido / tiempo_total * 100.0) if tiempo_total > 0 else 0.0
+                    (tiempo_detenido / tiempo_total * 100.0) 
+                    if tiempo_total > 0 
+                    else 0.0
                 )
-
+                
                 indicadores["cant_detenciones"] = float(len(detenciones))
                 indicadores["tiempo_detenido_s"] = tiempo_detenido
                 indicadores["porcentaje_detenido"] = porcentaje_detenido
-
+                
                 # Guardar en el diccionario de resultados del experimento
                 experimento.resultados_individuales[trayectoria.id_peaton] = indicadores
 
@@ -92,46 +98,6 @@ class AnalisisIndividual(EtapaPipeline[list[Experimento], list[Experimento]]):
             "distancia_total": distancia_total,
             "desplazamiento": desplazamiento,
             "velocidad_media": velocidad_media,
-            "velocidad_maxima": vel_maxima,
             "eficiencia": eficiencia,
+            "velocidad_maxima": vel_maxima
         }
-
-    def _detectar_detenciones(
-        self,
-        trayectoria: Trayectoria,
-        fps: float | None,
-        umbral_velocidad: float = 0.2, 
-    ) -> list[tuple[int, int]]:
-        """Identifica intervalos de detención (frame_inicio, frame_fin)."""
-        obs = trayectoria.observaciones
-        if len(obs) < 2:
-            return []
-
-        fps_val = fps if fps and fps > 0 else 25.0
-        intervalos_detencion: list[tuple[int, int]] = []
-
-        en_detencion = False
-        frame_inicio_det = 0
-
-        for i in range(1, len(obs)):
-            dx = obs[i].x - obs[i - 1].x
-            dy = obs[i].y - obs[i - 1].y
-            d_i = math.sqrt(dx**2 + dy**2)
-            dt_i = (obs[i].frame - obs[i - 1].frame) / fps_val
-
-            v_i = (d_i / dt_i) if dt_i > 0 else 0.0
-
-            if v_i < umbral_velocidad:
-                if not en_detencion:
-                    en_detencion = True
-                    frame_inicio_det = obs[i - 1].frame
-            else:
-                if en_detencion:
-                    en_detencion = False
-                    frame_fin_det = obs[i - 1].frame
-                    intervalos_detencion.append((frame_inicio_det, frame_fin_det))
-
-        if en_detencion:
-            intervalos_detencion.append((frame_inicio_det, obs[-1].frame))
-
-        return intervalos_detencion

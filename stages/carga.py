@@ -1,5 +1,3 @@
-"""Etapa de carga de varios experimentos."""
-
 from pathlib import Path
 
 from models.experimento import Experimento
@@ -7,10 +5,8 @@ from models.observacion import Observacion
 from pipeline.contexto import ContextoPipeline
 from pipeline.etapa import EtapaPipeline
 
-
 class CargaExperimentos(EtapaPipeline[None, list[Experimento]]):
     """Carga una colección de experimentos desde la ruta configurada."""
-
     def ejecutar(
         self,
         entrada: None,
