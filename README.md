@@ -47,7 +47,7 @@ Para su correcto funcionamiento, es necesario posicionarse en el directorio del 
 El proyecto se ejecuta mediante una interfaz de línea de comandos parametrizada con `argparse`. Para ejecutar el script principal `main.py`, se utiliza la bandera `--input` para especificar la carpeta de entrada y `--output` para la carpeta de resultados:
 
 ```bash
-python3 main.py --input data --output results
+python3 main.py --input ./data --output ./results 
 ```
 También es posible forzar una frecuencia de muestreo específica mediante la opción `--fps`:
 ```bash
