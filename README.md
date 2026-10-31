@@ -2,7 +2,7 @@
 
 ## Asignatura: Programación Científica  
 
-# Integrantes: 
+## Integrantes: 
 - Enzo Díaz
 - Matías Alquinta
 - Daniel Robles
@@ -51,7 +51,7 @@ python3 main.py --input data --output results
 ```
 También es posible forzar una frecuencia de muestreo específica mediante la opción `--fps`:
 ```bash
-python3 main.py --input ./data --output ./results --fps 2
+python3 main.py --input ./data --output ./results --fps 25
 ```
 
 En caso de no especificar la frecuencia de muestreo, el sistema asignará por defecto el valor de 25 FPS.
