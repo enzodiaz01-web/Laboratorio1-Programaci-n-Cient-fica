@@ -89,6 +89,8 @@ class ComparacionExperimentos(
             if len(t.observaciones) >= 2
         ]
 
+        eficiencias = [t.calcular_eficiencia_espacial() for t in trayectorias]
+
         velocidad_media = _media(velocidades)
         densidad_media = experimento.resultados_colectivos.get("densidad_media", 0.0)
 
@@ -97,6 +99,7 @@ class ComparacionExperimentos(
             "velocidad_media": velocidad_media,
             "distancia_media": _media(distancias),
             "tiempo_medio": _media(tiempos),
+            "eficiencia_media": _media(eficiencias),
             # Relación fundamental J_s = rho * v (aproximada con la velocidad
             # media global del experimento); se contrasta con el flujo medido.
             "flujo_especifico_teorico": densidad_media * velocidad_media,

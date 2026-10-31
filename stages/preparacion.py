@@ -65,6 +65,3 @@ class PreparacionTrayectorias(EtapaPipeline[list[Experimento], list[Experimento]
             Trayectoria(id_peaton=id_p, observaciones=lista_obs)
             for id_p, lista_obs in observaciones_organizadas.items()
             if len(lista_obs) >= 2]
-
-
-       

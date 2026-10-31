@@ -99,5 +99,44 @@ class AnalisisIndividual(EtapaPipeline[list[Experimento], list[Experimento]]):
             "desplazamiento": desplazamiento,
             "velocidad_media": velocidad_media,
             "eficiencia": eficiencia,
-            "velocidad_maxima": vel_maxima
+            "velocidad_maxima": vel_maxima,
         }
+    
+    def _detectar_detenciones(
+        self,
+        trayectoria: Trayectoria,
+        fps: float | None,
+        umbral_velocidad: float = 0.2, 
+    ) -> list[tuple[int, int]]:
+        """Identifica intervalos de detención (frame_inicio, frame_fin)."""
+        obs = trayectoria.observaciones
+        if len(obs) < 2:
+            return []
+        fps_val = fps if fps and fps > 0 else 25.0
+        intervalos_detencion: list[tuple[int, int]] = []
+        en_detencion = False
+        frame_inicio_det = 0
+        for i in range(1, len(obs)):
+            dx = obs[i].x - obs[i - 1].x
+            dy = obs[i].y - obs[i - 1].y
+            d_i = math.sqrt(dx**2 + dy**2)
+            dt_i = (obs[i].frame - obs[i - 1].frame) / fps_val
+            if dt_i <= 0:
+                continue
+
+            v_i = d_i / dt_i
+
+            if v_i < umbral_velocidad:
+                if not en_detencion:
+                    en_detencion = True
+                    frame_inicio_det = obs[i - 1].frame
+            else:
+                if en_detencion:
+                    en_detencion = False
+                    frame_fin_det = obs[i - 1].frame
+                    intervalos_detencion.append((frame_inicio_det, frame_fin_det))
+
+        if en_detencion:
+            intervalos_detencion.append((frame_inicio_det, obs[-1].frame))
+
+        return intervalos_detencion

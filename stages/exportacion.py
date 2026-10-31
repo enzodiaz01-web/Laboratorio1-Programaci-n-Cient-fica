@@ -18,6 +18,7 @@ CLAVES_RESUMEN = (
     "flujo_peatonal",
     "distancia_media",
     "tiempo_medio",
+    "eficiencia_media",
     "flujo_especifico_teorico",
     "fps_usado",
 )

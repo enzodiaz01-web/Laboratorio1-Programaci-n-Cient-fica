@@ -49,3 +49,13 @@ class Trayectoria:
         distancia_total = self.calcular_distancia_total()
 
         return distancia_total / tiempo_total_segundos
+
+    def calcular_eficiencia_espacial(self) -> float:
+        """Calcula la eficiencia de la trayectoria E = D / D_r."""
+        dr = self.calcular_distancia_total()
+        if dr <= 0 or len(self.observaciones) < 2:
+            return 0.0
+        p_ini = self.observaciones[0]
+        p_fin = self.observaciones[-1]
+        d_neto = math.sqrt((p_fin.x - p_ini.x) ** 2 + (p_fin.y - p_ini.y) ** 2)
+        return d_neto / dr
