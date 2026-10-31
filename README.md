@@ -1,6 +1,6 @@
 # Laboratorio 1: Análisis de Trayectorias Peatonales
 
-# Asignatura: Programación Científica  
+## Asignatura: Programación Científica  
 
 # Integrantes: 
 - Enzo Díaz
@@ -48,3 +48,10 @@ El proyecto se ejecuta mediante una interfaz de línea de comandos parametrizada
 
 ```bash
 python3 main.py --input data --output results
+```
+También es posible forzar una frecuencia de muestreo específica mediante la opción `--fps`:
+```bash
+python3 main.py --input ./data --output ./results --fps 2
+```
+
+En caso de no especificar la frecuencia de muestreo, el sistema asignará por defecto el valor de 25 FPS.
